@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "users")
 public class User {
     @Id
-    @Column(name = "user_id")
+    @Column(name = "id")
     @JsonProperty
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -29,10 +29,4 @@ public class User {
     @Column(name = "password")
     @JsonProperty
     private String password;
-
-
-    @Column(name = "city")
-    @JsonProperty
-    private String city;
-
 }
