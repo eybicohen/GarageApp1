@@ -38,7 +38,7 @@
 
       <v-btn class="mr-4" @click="submit" color="success"> submit </v-btn>
       <v-btn @click="clear"> clear </v-btn>
-      <v-btn to="/" class="ml-5" color="primary"> login </v-btn>
+      <v-btn to="/login" class="ml-5" color="primary"> login </v-btn>
     </form></v-container
   >
 </template>
