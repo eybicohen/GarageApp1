@@ -1,0 +1,22 @@
+users
+-
+CREATE TABLE users(
+	id SERIAL PRIMARY KEY,
+	first_name TEXT NOT NULL,
+	last_name TEXT NOT NULL,
+	email TEXT NOT NULL UNIQUE,
+	password TEXT NOT NULL
+)
+
+
+cars-
+
+CREATE TABLE cars(
+	id SERIAL PRIMARY KEY,
+	car_name TEXT NOT NULL,
+	car_company TEXT,
+	model TEXT,
+	image TEXT,
+	user_id INTEGER,
+	FOREIGN KEY (user_id) REFERENCES users(id)
+)
