@@ -113,15 +113,13 @@ export default {
       if (!this.$v.$error) {
         try {
           const user = {
-            firstName: this.firstName,
+            firstName: this.name,
             lastName: this.lastName,
             email: this.email,
             password: this.password,
           };
           await users.registerUser(user);
-          this.$store.commit("changeUser", user);
-          localStorage.setItem("user", JSON.stringify(user));
-          this.$router.push({ name: "home" });
+          this.$router.push({ name: "login" });
         } catch {
           alert("oops looks like you already have an acount");
         }

@@ -1,7 +1,7 @@
 <template>
   <form style="margin-top: 30vh; width: 40vw; margin-left: 28vw">
     <v-text-field
-      v-model="carName"
+      v-model.trim="carName"
       :error-messages="carNameErrors"
       :counter="10"
       label="car name"
@@ -31,7 +31,7 @@
 </template>
 <script>
 import { validationMixin } from "vuelidate";
-import { required, alphaNum, alpha } from "vuelidate/lib/validators";
+import { required, alphaNum, alpha, helpers } from "vuelidate/lib/validators";
 import carImage from "@/api/carImage.js";
 import cars from "@/api/cars.js";
 
@@ -39,7 +39,10 @@ export default {
   mixins: [validationMixin],
 
   validations: {
-    carName: { required, alphaNum },
+    carName: {
+      alphaSpace: helpers.regex("alphaSpace", /^[a-zA-Z0-9\s]+$/),
+      required,
+    },
     company: { alpha },
     model: { alphaNum },
   },
@@ -68,9 +71,10 @@ export default {
     carNameErrors() {
       const errors = [];
       if (!this.$v.carName.$dirty) return errors;
-      !this.$v.carName.alphaNum &&
+      !this.$v.carName.alphaSpace &&
         errors.push("car name can only contain letters or numbers");
       !this.$v.carName.required && errors.push("car name is required");
+
       return errors;
     },
   },
@@ -84,11 +88,11 @@ export default {
             carName: this.carName,
             carCompany: this.company,
             model: this.model,
-            image: carImage.getCarSrc(this.company, this.model),
-            userId: this.$store.state.user
+            image: await carImage.getCarSrc(this.company, this.model),
+            userId: this.$store.state.user,
           };
           await cars.addCar(car);
-          this.$emit("closeModal");
+          this.$emit("closeModal", car);
         } catch {
           alert("    ");
         }
