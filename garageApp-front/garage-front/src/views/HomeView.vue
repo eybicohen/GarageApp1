@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app style="background-color: rgba(170, 162, 80, 0.2)">
     <MainPage style="margin-top: 30vh" />
     <router-view></router-view>
   </v-app>

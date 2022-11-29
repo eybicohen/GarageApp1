@@ -1,25 +1,45 @@
 <template>
-  <v-container style="display: inline-flexbox; padding: 10px">
+  <v-container
+    style="display: inline-flexbox; padding: 10px; align-items: center"
+  >
     <div>
-      <v-dialog v-model="dialog">
+      <v-dialog v-model="dialog" width="600">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
-            Click Me
+          <v-btn
+            class="mb-10"
+            variant="text"
+            color="lime lighten-1"
+            @click="dialog = true"
+            v-bind="attrs"
+            v-on="on"
+          >
+            add car
+            <v-icon right dark> mdi-car-side </v-icon>
           </v-btn>
         </template>
 
-        <v-card style="margin-top: 100px">
-          <form style="height: 60vh; width: 40vw; margin-left: 30vw">
+        <v-card style="color: azure">
+          <form
+            style="
+              height: 55vh;
+              margin-left: 20px;
+              text-align: center;
+              align-items: center;
+              padding-top: 15px;
+            "
+          >
+            <h1></h1>
             <v-text-field
+              style="width: 30vw; margin-left: 8vw"
               v-model.trim="carName"
               :error-messages="carNameErrors"
-              :counter="10"
               label="car name"
               required
               @input="$v.carName.$touch()"
               @blur="$v.carName.$touch()"
             ></v-text-field>
             <v-text-field
+              style="width: 30vw; margin-left: 8vw"
               v-model="company"
               :error-messages="companyErrors"
               label="car company"
@@ -27,9 +47,9 @@
               @blur="$v.company.$touch()"
             ></v-text-field>
             <v-text-field
+              style="width: 30vw; margin-left: 8vw"
               v-model="model"
               :error-messages="modelErrors"
-              :counter="10"
               label="car model"
               @input="$v.model.$touch()"
               @blur="$v.model.$touch()"
@@ -41,23 +61,23 @@
         </v-card>
       </v-dialog>
     </div>
-    <v-btn color="success" class="white--text mb-10" @click="dialog = true">
-      add car
-      <v-icon right dark> mdi-car-side </v-icon>
-    </v-btn>
+
     <v-row>
-      <CarCard v-for="car in cars" v-bind:key="car.id" :currentCar="car" />
+      <CarCard
+        v-for="car in cars"
+        v-bind:key="car.id"
+        :car="car"
+        @enterCar="(n) => goToTreatment(n)"
+      />
     </v-row>
-    <AddCarModal @closeModal="closeModal" v-if="dialog" />
   </v-container>
 </template>
 
 <script>
 import CarCard from "../components/CarCard.vue";
-import AddCarModal from "../components/AddCarModal.vue";
 import cars1 from "@/api/cars";
 import { validationMixin } from "vuelidate";
-import { required, alphaNum, alpha, helpers } from "vuelidate/lib/validators";
+import { required, helpers } from "vuelidate/lib/validators";
 import carImage from "@/api/carImage.js";
 
 export default {
@@ -69,23 +89,24 @@ export default {
       alphaSpace: helpers.regex("alphaSpace", /^[a-zA-Z0-9\s]+$/),
       required,
     },
-    company: { alpha },
-    model: { alphaNum },
+    company: { alphaSpace2: helpers.regex("alphaSpace", /^[a-zA-Z0-9\s-]*$/) },
+    model: { alphaSpace1: helpers.regex("alphaSpace", /^[a-zA-Z0-9\s-]*$/) },
   },
 
   computed: {
     companyErrors() {
       const errors = [];
       if (!this.$v.company.$dirty) return errors;
-      !this.$v.company.alpha &&
+      !this.$v.company.alphaSpace2 &&
         errors.push("car company can only contain letters");
       return errors;
     },
     modelErrors() {
       const errors = [];
       if (!this.$v.model.$dirty) return errors;
-      !this.$v.model.alphaNum &&
-        errors.push("car model can only contain letters or numbers");
+      !this.$v.model.alphaSpace1 &&
+        errors.push("car name can only contain letters or numbers");
+
       return errors;
     },
     carNameErrors() {
@@ -109,27 +130,26 @@ export default {
   async created() {
     this.cars = await cars1.getCars();
   },
-  components: { CarCard, AddCarModal },
+  components: { CarCard },
   methods: {
-    closeModal(car) {
-      this.dialog = false;
-      this.cars.push(car);
-    },
     async submit() {
       this.$v.$touch();
       if (!this.$v.$error) {
+        const img = await carImage.getCarSrc(this.company, this.model);
         try {
           const car = {
             carName: this.carName,
             carCompany: this.company,
             model: this.model,
-            image: await carImage.getCarSrc(this.company, this.model),
+            image: img,
             userId: this.$store.state.user,
           };
-          await cars.addCar(car);
-          this.closeModal(car);
+          await cars1.addCar(car);
+          this.cars.push(car);
+          this.clear();
+          this.dialog = false;
         } catch {
-          alert("    ");
+          alert("we have not managed to add your car, sorry");
         }
       }
     },
@@ -139,13 +159,10 @@ export default {
       this.company = "";
       this.model = "";
     },
+    goToTreatment(car) {
+      this.$store.commit("changeCurrentCar", car);
+      this.$router.push({ name: "treatment" });
+    },
   },
-  // computed: {
-  //   async cars() {
-  //     let cars = [];
-  //     cars = await cars1.getCars();
-  //     return cars;
-  //   },
-  // },
 };
 </script>

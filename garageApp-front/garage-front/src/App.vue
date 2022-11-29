@@ -2,13 +2,11 @@
   <v-app>
     <v-app-bar
       absolute
-      color="#6A76AB"
       dark
       shrink-on-scroll
       prominent
       src="./assets/pexels-cottonbro-studio-4488637.jpg"
       fade-img-on-scroll
-      scroll-target="#scrolling-techniques-3"
     >
       <template v-slot:img="{ props }">
         <v-img
