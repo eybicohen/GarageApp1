@@ -20,3 +20,14 @@ CREATE TABLE cars(
 	user_id INTEGER,
 	FOREIGN KEY (user_id) REFERENCES users(id)
 )
+
+treatments-
+
+CREATE TABLE treatments(
+	id SERIAL PRIMARY KEY,
+	treatment_name TEXT NOT NULL,
+	treatment_description TEXT,
+	treatment_date DATE,
+	car_id INTEGER,
+	FOREIGN KEY (car_id) REFERENCES cars(id)
+)
