@@ -1,15 +1,14 @@
 package com.example.manageAppback.repositories;
 
 
-import com.example.manageAppback.models.Event;
+import com.example.manageAppback.models.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event, Integer> {
+public interface CarRepository extends JpaRepository<Car, Integer> {
 
-    List<Event> findByUserId_Id(Integer userId);
+    List<Car> findByUserId_Id(Integer userId);
 }
