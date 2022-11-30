@@ -1,6 +1,11 @@
 <template>
-  <v-col @click="$emit('enterCar', car)"
-    ><v-card class="mx-auto" max-width="344" style="cursor: pointer">
+  <v-col
+    ><v-card
+      class="mx-auto"
+      max-width="344"
+      style="cursor: pointer"
+      @click="$emit('enterCar', car)"
+    >
       <v-img :src="car.image" height="200px"></v-img>
 
       <v-card-title> {{ car.carName }}</v-card-title>

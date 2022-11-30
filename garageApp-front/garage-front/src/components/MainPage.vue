@@ -12,9 +12,10 @@
             @click="dialog = true"
             v-bind="attrs"
             v-on="on"
+            large
           >
             add car
-            <v-icon right dark> mdi-car-side </v-icon>
+            <v-icon right dark normal> mdi-car-side </v-icon>
           </v-btn>
         </template>
 
@@ -55,8 +56,10 @@
               @blur="$v.model.$touch()"
             ></v-text-field>
 
-            <v-btn class="mr-4" @click="submit" color="success"> submit </v-btn>
-            <v-btn @click="clear"> clear </v-btn>
+            <v-btn class="mr-4" @click="submit" color="success" variant="text">
+              add car
+            </v-btn>
+            <v-btn @click="close" color="red lighten-1"> close </v-btn>
           </form>
         </v-card>
       </v-dialog>
@@ -161,7 +164,13 @@ export default {
     },
     goToTreatment(car) {
       this.$store.commit("changeCurrentCar", car);
+      localStorage.setItem("car", JSON.stringify(car));
       this.$router.push({ name: "treatment" });
+      window.scrollTo(0, 0);
+    },
+    close() {
+      this.clear();
+      this.dialog = false;
     },
   },
 };

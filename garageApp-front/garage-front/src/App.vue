@@ -25,14 +25,6 @@
       <span>{{ user.firstName }}</span>
       <v-spacer></v-spacer>
 
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
       <v-btn
         color="blue-grey"
         class="ma-2 white--text"
@@ -42,7 +34,32 @@
         logout
         <v-icon right dark> mdi-logout-variant</v-icon>
       </v-btn>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-menu bottom left>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn dark icon v-bind="attrs" v-on="on">
+            <v-app-bar-nav-icon></v-app-bar-nav-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item>
+            <router-link to="/" style="text-decoration: none; color: inherit">
+              <v-btn color="blue-grey" class="ma-2 white--text"
+                >home
+                <v-icon right dark> mdi-home-outline</v-icon>
+              </v-btn>
+            </router-link>
+          </v-list-item>
+          <v-list-item>
+            <router-link to="/" style="text-decoration: none; color: inherit">
+              <v-btn color="blue-grey" class="ma-2 white--text"
+                >donate
+                <v-icon right dark> mdi-hand-coin-outline</v-icon>
+              </v-btn>
+            </router-link>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <router-view></router-view>
   </v-app>

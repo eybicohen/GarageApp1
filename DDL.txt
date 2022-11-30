@@ -28,6 +28,7 @@ CREATE TABLE treatments(
 	treatment_name TEXT NOT NULL,
 	treatment_description TEXT,
 	treatment_date DATE,
+	is_done BOOLEAN NOT NULL,
 	car_id INTEGER,
 	FOREIGN KEY (car_id) REFERENCES cars(id)
 )
