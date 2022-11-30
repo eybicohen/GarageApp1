@@ -13,6 +13,10 @@ public class Car {
     @JsonProperty
     private Integer carId;
 
+    @Column(name = "car_name")
+    @JsonProperty
+    private String carName;
+
     @Column(name = "car_company")
     @JsonProperty
     private String carCompany;

@@ -30,12 +30,12 @@ public class CarController {
     }
 
     @PostMapping("")
-    public void addEvent(@RequestBody Car newCar) {
+    public void addCar(@RequestBody Car newCar) {
         this.carService.addCar(newCar);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEvent(@PathVariable Integer id) {
+    public void deleteCar(@PathVariable Integer id) {
         this.carService.deleteCar(id);
     }
 }

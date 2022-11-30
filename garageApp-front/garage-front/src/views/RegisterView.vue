@@ -38,7 +38,7 @@
 
       <v-btn class="mr-4" @click="submit" color="success"> submit </v-btn>
       <v-btn @click="clear"> clear </v-btn>
-      <v-btn to="/" class="ml-5" color="primary"> login </v-btn>
+      <v-btn to="/login" class="ml-5" color="primary"> login </v-btn>
     </form></v-container
   >
 </template>
@@ -113,15 +113,13 @@ export default {
       if (!this.$v.$error) {
         try {
           const user = {
-            firstName: this.firstName,
+            firstName: this.name,
             lastName: this.lastName,
             email: this.email,
             password: this.password,
           };
           await users.registerUser(user);
-          this.$store.commit("changeUser", user);
-          localStorage.setItem("user", JSON.stringify(user));
-          this.$router.push({ name: "home" });
+          this.$router.push({ name: "login" });
         } catch {
           alert("oops looks like you already have an acount");
         }
