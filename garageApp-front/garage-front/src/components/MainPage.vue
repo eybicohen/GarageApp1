@@ -148,7 +148,7 @@ export default {
             userId: this.$store.state.user,
           };
           await cars1.addCar(car);
-          this.cars.push(car);
+          this.cars = await cars1.getCars();
           this.clear();
           this.dialog = false;
         } catch {

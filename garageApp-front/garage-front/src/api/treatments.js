@@ -14,4 +14,7 @@ export default {
   async changeTreatmentState(treatment) {
     await axios.patch(BASE_URL, treatment);
   },
+  async deleteTreatment(treatment) {
+    await axios.delete(BASE_URL + treatment.treatmentId);
+  },
 };

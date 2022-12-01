@@ -11,4 +11,7 @@ export default {
   async addCar(newCar) {
     await axios.post(BASE_URL, newCar);
   },
+  async deleteCar(carId) {
+    await axios.delete(BASE_URL + carId);
+  },
 };

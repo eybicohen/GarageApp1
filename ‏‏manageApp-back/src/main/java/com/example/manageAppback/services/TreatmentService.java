@@ -13,10 +13,19 @@ public class TreatmentService {
     @Autowired
     TreatmentRepository treatmentRepository;
 
-    public List<Car> getAllByCarId(Integer carId) {
-        return this.treatmentRepository.findByCarId_carId(carId);
+    public List<Treatment> getAllByCarId(Integer carId) {
+        return this.treatmentRepository.findByCarId_CarId(carId);
     }
 
     public void addTreatment(Treatment newTreatment) {
+        this.treatmentRepository.save(newTreatment);
+    }
+
+    public void changeState(Treatment treatment) {
+        this.treatmentRepository.save(treatment);
+    }
+
+    public void delete(Integer id) {
+        this.treatmentRepository.deleteById(id);
     }
 }

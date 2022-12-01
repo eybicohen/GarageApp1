@@ -34,7 +34,7 @@
         logout
         <v-icon right dark> mdi-logout-variant</v-icon>
       </v-btn>
-      <v-menu bottom left>
+      <v-menu bottom left v-if="isUserConnected">
         <template v-slot:activator="{ on, attrs }">
           <v-btn dark icon v-bind="attrs" v-on="on">
             <v-app-bar-nav-icon></v-app-bar-nav-icon>

@@ -29,4 +29,9 @@ public class TreatmentController {
     public void changeState(@RequestBody Treatment treatment) {
         this.treatmentService.changeState(treatment);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteTreatment(@PathVariable Integer id) {
+        this.treatmentService.delete(id);
+    }
 }
