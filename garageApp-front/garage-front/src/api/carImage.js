@@ -5,7 +5,7 @@ export default {
     let res = await axios.get(imgUrl);
     return res.headers["x-imaginstudio-request-found"];
   },
-  async getCarSrc(company, model) {
+  async getCarSrc(company, model, bodyType) {
     const state = await this.readResponseHeader(
       "https://cdn.imagin.studio/getImage?customer=img&make=" +
         company +
@@ -25,7 +25,9 @@ export default {
         "&angle=" +
         angleArr[this.generateRandom()] +
         "&zoomType=fullscreen&paintId=" +
-        colors[this.generateRandom(colors.length)].toString()
+        colors[this.generateRandom(colors.length)].toString() +
+        "&modelVariant=" +
+        bodyType
       );
     }
   },

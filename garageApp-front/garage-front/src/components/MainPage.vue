@@ -22,19 +22,18 @@
         <v-card style="color: azure">
           <form
             style="
-              height: 55vh;
+              height: 63vh;
               margin-left: 20px;
               text-align: center;
               align-items: center;
               padding-top: 15px;
             "
           >
-            <h1></h1>
             <v-text-field
               style="width: 30vw; margin-left: 8vw"
               v-model.trim="carName"
               :error-messages="carNameErrors"
-              label="car name"
+              label="Car Name"
               required
               @input="$v.carName.$touch()"
               @blur="$v.carName.$touch()"
@@ -43,7 +42,7 @@
               style="width: 30vw; margin-left: 8vw"
               v-model="company"
               :error-messages="companyErrors"
-              label="car company"
+              label="Car Company"
               @input="$v.company.$touch()"
               @blur="$v.company.$touch()"
             ></v-text-field>
@@ -51,15 +50,24 @@
               style="width: 30vw; margin-left: 8vw"
               v-model="model"
               :error-messages="modelErrors"
-              label="car model"
+              label="Car Model"
               @input="$v.model.$touch()"
               @blur="$v.model.$touch()"
             ></v-text-field>
+            <v-select
+              :items="items"
+              label="Body Type"
+              style="width: 30vw; margin-left: 8vw"
+              required
+              v-model="type"
+            ></v-select>
 
-            <v-btn class="mr-4" @click="submit" color="success" variant="text">
+            <v-btn class="mr-3" @click="submit" color="success">
               add car
             </v-btn>
-            <v-btn @click="close" color="red lighten-1"> close </v-btn>
+            <v-btn @click="close" color="red lighten-1" class="mr-3">
+              close
+            </v-btn>
           </form>
         </v-card>
       </v-dialog>
@@ -82,6 +90,8 @@ import cars1 from "@/api/cars";
 import { validationMixin } from "vuelidate";
 import { required, helpers } from "vuelidate/lib/validators";
 import carImage from "@/api/carImage.js";
+import DatePicker from "vue2-datepicker";
+import "vue2-datepicker/index.css";
 
 export default {
   name: "MainPage",
@@ -129,16 +139,36 @@ export default {
     carName: "",
     company: "",
     model: "",
+    type: "",
+    items: [
+      "hatchback",
+      "sedan",
+      "estate",
+      "mpv",
+      "suv",
+      "convertible",
+      "coupe",
+      "targa",
+      "pickup",
+      "closed-cabin",
+      "double-cabin",
+      "passenger-cabin",
+    ],
   }),
   async created() {
     this.cars = await cars1.getCars();
   },
+
   components: { CarCard },
   methods: {
     async submit() {
       this.$v.$touch();
       if (!this.$v.$error) {
-        const img = await carImage.getCarSrc(this.company, this.model);
+        const img = await carImage.getCarSrc(
+          this.company,
+          this.model,
+          this.type
+        );
         try {
           const car = {
             carName: this.carName,
@@ -161,6 +191,7 @@ export default {
       this.carName = "";
       this.company = "";
       this.model = "";
+      this.type = "";
     },
     goToTreatment(car) {
       this.$store.commit("changeCurrentCar", car);

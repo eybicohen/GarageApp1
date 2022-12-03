@@ -1,6 +1,7 @@
 <template>
   <v-app style="margin-top: 30vh; width: 90vw; margin-left: 5vw">
     <v-img max-height="600" :src="car.image"></v-img>
+
     <div>
       <v-dialog v-model="dialog" width="750">
         <template v-slot:activator="{ on, attrs }">
@@ -94,7 +95,34 @@
         </v-card>
       </v-dialog>
     </div>
-    <v-timeline align-top :dense="$vuetify.breakpoint.smAndDown">
+    <v-btn-toggle
+      borderless
+      v-model="toggle"
+      style="margin-left: 32vw"
+      class="mb-8"
+    >
+      <v-btn
+        @click="changeView"
+        style="background-color: rgba(170, 162, 80, 0.2)"
+      >
+        <span class="hidden-sm-and-down">Timeline View</span>
+
+        <v-icon right> mdi-timeline-outline </v-icon>
+      </v-btn>
+      <v-btn
+        @click="changeView"
+        style="background-color: rgba(170, 162, 80, 0.2)"
+      >
+        <span class="hidden-sm-and-down">calendar view</span>
+
+        <v-icon right> mdi-calendar-month-outline </v-icon>
+      </v-btn>
+    </v-btn-toggle>
+    <v-timeline
+      align-top
+      :dense="$vuetify.breakpoint.smAndDown"
+      v-if="timeline"
+    >
       <v-timeline-item
         v-for="(treatment, i) in treatments2"
         :key="i"
@@ -139,7 +167,7 @@
         </v-card>
       </v-timeline-item>
     </v-timeline>
-    <template>
+    <template v-if="calendar">
       <v-row class="fill-height mt-14">
         <v-col>
           <v-sheet height="64">
@@ -218,7 +246,7 @@
                   <v-spacer></v-spacer>
                 </v-toolbar>
                 <v-card-text>
-                  <span v-html="selectedEvent.details"></span>
+                  <span>{{ selectedEvent.treatmentDescription }}</span>
                 </v-card-text>
                 <v-card-actions>
                   <v-btn text color="secondary" @click="selectedOpen = false">
@@ -239,6 +267,7 @@
 import treatments1 from "@/api/treatments";
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
+import Swal from "sweetalert2";
 
 export default {
   name: "CarView",
@@ -271,6 +300,9 @@ export default {
     selectedElement: null,
     selectedOpen: false,
     events: [],
+    toggle: 0,
+    timeline: true,
+    calendar: false,
   }),
   computed: {
     treatmentNameErrors() {
@@ -287,9 +319,7 @@ export default {
       });
     },
   },
-  mounted() {
-    this.$refs.calendar.checkChange();
-  },
+  mounted() {},
   async created() {
     if (JSON.parse(localStorage.getItem("car")) === null) {
       this.$router.push({ name: "home" });
@@ -355,6 +385,7 @@ export default {
       try {
         treatment.isDone = true;
         await treatments1.changeTreatmentState(treatment);
+        this.treatments = await treatments1.getTreatments();
         this.updateRange();
       } catch {
         alert("we have not managed to update this treatment, sorry");
@@ -411,10 +442,26 @@ export default {
           name: this.treatments[i].treatmentName,
           start: this.treatments[i].treatmentDate,
           color: this.treatments[i].isDone ? "success" : "warning",
+          treatmentDescription: this.treatments[i].treatmentDescription,
         });
       }
 
       this.events = events;
+    },
+    changeView() {
+      if (this.timeline == true) {
+        this.timeline = false;
+        this.calendar = true;
+        Swal.fire({
+          icon: "info",
+          title: "notice",
+          text: "in this view you can only see titles of treatments and their date",
+          timer: 5000,
+        });
+      } else {
+        this.calendar = false;
+        this.timeline = true;
+      }
     },
   },
 };
