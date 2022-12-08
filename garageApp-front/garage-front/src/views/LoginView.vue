@@ -14,13 +14,12 @@
                           class="text-center display-2 #FFE082--text text--#FFE082"
                           style="color: #d4e157"
                         >
-                          Sign in to Care tracking
+                          Sign in to garageApp
                         </h1>
                         <div class="text-center mt-4">
                           <v-btn class="mx-2" fab color="black" outlined>
                             <v-icon>fab fa-facebook-f</v-icon>
                           </v-btn>
-
                           <v-btn class="mx-2" fab color="black" outlined>
                             <v-icon>fab fa-google-plus-g</v-icon>
                           </v-btn>
@@ -234,6 +233,7 @@ export default {
     email1: "",
     password1: "",
   }),
+
   props: {
     source: String,
   },
@@ -285,10 +285,16 @@ export default {
           const user = await users.getUserByEmail(this.email1);
           if (this.password1 == user.password) {
             this.$store.commit("changeUser", user);
+            this.$store.commit("changeUserConnected", true);
             localStorage.setItem("user", JSON.stringify(user));
             this.$router.push({ name: "home" });
+            this.$alertify.success("login successfully");
           } else {
-            alert("one of the details is wrong");
+            Swal.fire({
+              icon: "error",
+              title: "ooops.....",
+              text: "one of the details is wrong",
+            });
           }
         } else {
           this.$v.$touch();
@@ -300,9 +306,14 @@ export default {
               password: this.password,
             };
             await users.registerUser(user);
+            this.$alertify.success("user added successfully");
             this.step--;
           } catch {
-            alert("oops looks like you already have an acount");
+            Swal.fire({
+              icon: "error",
+              title: "ooops.....",
+              text: "looks like you already have an acount",
+            });
           }
         }
       }

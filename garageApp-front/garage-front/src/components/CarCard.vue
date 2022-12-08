@@ -9,7 +9,6 @@
       <v-img :src="car.image" height="200px"></v-img>
 
       <v-card-title> {{ car.carName }}</v-card-title>
-
       <v-card-subtitle>{{ car.carCompany }} {{ car.model }} </v-card-subtitle>
     </v-card></v-col
   >

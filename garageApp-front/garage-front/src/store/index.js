@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     user: {},
     currentCar: {},
+    isUserConnected: false,
   },
   getters: {
     user: (state) => {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
     },
     changeCurrentCar(state, car) {
       state.currentCar = car;
+    },
+    changeUserConnected(state, isConnected) {
+      state.isUserConnected = isConnected;
     },
   },
   actions: {},

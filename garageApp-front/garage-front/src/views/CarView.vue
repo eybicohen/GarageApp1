@@ -2,99 +2,110 @@
   <v-app style="margin-top: 30vh; width: 90vw; margin-left: 5vw">
     <v-img max-height="600" :src="car.image"></v-img>
 
-    <div>
-      <v-dialog v-model="dialog" width="750">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            class="mb-10 ml-10"
-            variant="text"
-            color="lime lighten-1"
-            @click="dialog = true"
-            v-bind="attrs"
-            v-on="on"
-          >
-            new treatment
-            <v-icon right dark> mdi-garage-variant </v-icon>
-          </v-btn>
-        </template>
-
-        <v-card style="color: azure">
-          <form
-            style="
-              height: 75vh;
-              margin-left: 75px;
-              text-align: center;
-              align-items: center;
-              padding-top: 15px;
-            "
-          >
-            <h1></h1>
-            <v-text-field
-              style="width: 35vw; margin-left: 7vw"
-              v-model="treatmentName"
-              :error-messages="treatmentNameErrors"
-              label="Treatment Name"
-              required
-              @input="$v.treatmentName.$touch()"
-              @blur="$v.treatmentName.$touch()"
-            ></v-text-field>
-            <v-textarea
-              style="width: 35vw; margin-left: 7vw"
-              prepend-icon="mdi-car-wrench"
-              v-model="description"
-              label="Treatment Description"
-              rows="3"
-            ></v-textarea>
-
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              :return-value.sync="date"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
+    <v-row class="mt-6">
+      <div>
+        <v-dialog v-model="dialog" width="750">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="mb-10 ml-10"
+              variant="text"
+              color="lime lighten-1"
+              @click="dialog = true"
+              v-bind="attrs"
+              v-on="on"
             >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  style="width: 35vw; margin-left: 7vw"
-                  v-model="date"
-                  label="Treatment Date"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="date" no-title scrollable>
-                <v-spacer></v-spacer>
-                <v-btn text color="primary" @click="menu = false">
-                  Cancel
-                </v-btn>
-                <v-btn text color="primary" @click="$refs.menu.save(date)">
-                  OK
-                </v-btn>
-              </v-date-picker>
-            </v-menu>
-
-            <v-switch
-              style="margin-left: 8vw"
-              v-model="switch1"
-              :label="label()"
-              color="success"
-            ></v-switch>
-
-            <v-btn class="mr-3" @click="submit" color="success" variant="text">
-              add treatment
-              <v-icon right dark> mdi-plus </v-icon>
+              new treatment
+              <v-icon right dark> mdi-garage-variant </v-icon>
             </v-btn>
-            <v-btn @click="close" color="red lighten-1" class="mr-16">
-              close
-            </v-btn>
-          </form>
-        </v-card>
-      </v-dialog>
-    </div>
+          </template>
+
+          <v-card style="color: azure">
+            <form
+              style="
+                height: 75vh;
+                margin-left: 75px;
+                text-align: center;
+                align-items: center;
+                padding-top: 15px;
+              "
+            >
+              <h1></h1>
+              <v-text-field
+                style="width: 35vw; margin-left: 7vw"
+                v-model="treatmentName"
+                :error-messages="treatmentNameErrors"
+                label="Treatment Name"
+                required
+                @input="$v.treatmentName.$touch()"
+                @blur="$v.treatmentName.$touch()"
+              ></v-text-field>
+              <v-textarea
+                style="width: 35vw; margin-left: 7vw"
+                prepend-icon="mdi-car-wrench"
+                v-model="description"
+                label="Treatment Description"
+                rows="3"
+              ></v-textarea>
+
+              <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="date"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    style="width: 35vw; margin-left: 7vw"
+                    v-model="date"
+                    label="Treatment Date"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker v-model="date" no-title scrollable>
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="menu = false">
+                    Cancel
+                  </v-btn>
+                  <v-btn text color="primary" @click="$refs.menu.save(date)">
+                    OK
+                  </v-btn>
+                </v-date-picker>
+              </v-menu>
+
+              <v-switch
+                style="margin-left: 8vw"
+                v-model="switch1"
+                :label="label()"
+                color="success"
+              ></v-switch>
+
+              <v-btn
+                class="mr-3"
+                @click="submit"
+                color="success"
+                variant="text"
+              >
+                add treatment
+                <v-icon right dark> mdi-plus </v-icon>
+              </v-btn>
+              <v-btn @click="close" color="red lighten-1" class="mr-16">
+                close
+              </v-btn>
+            </form>
+          </v-card>
+        </v-dialog>
+      </div>
+      <v-btn class="ml-3" text color="red lighten-1" @click="delete2">
+        delete car
+        <v-icon right dark> mdi-delete </v-icon>
+      </v-btn></v-row
+    >
     <v-btn-toggle
       borderless
       v-model="toggle"
@@ -105,9 +116,9 @@
         @click="changeView"
         style="background-color: rgba(170, 162, 80, 0.2)"
       >
-        <span class="hidden-sm-and-down">Timeline View</span>
+        <v-icon left> mdi-timeline-outline </v-icon>
 
-        <v-icon right> mdi-timeline-outline </v-icon>
+        <span class="hidden-sm-and-down">Timeline View</span>
       </v-btn>
       <v-btn
         @click="changeView"
@@ -268,6 +279,8 @@ import treatments1 from "@/api/treatments";
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 import Swal from "sweetalert2";
+import cars from "@/api/cars";
+import alertify from "alertifyjs";
 
 export default {
   name: "CarView",
@@ -352,9 +365,14 @@ export default {
           this.treatments = await treatments1.getTreatments();
           this.clear();
           this.dialog = false;
+          this.$alertify.success("treatment added");
           this.updateRange();
         } catch {
-          alert("we have not managed to add this treatment, sorry");
+          Swal.fire({
+            icon: "error",
+            title: "ooops.....",
+            text: "we have not managed to add this treatment, sorry",
+          });
         }
       }
     },
@@ -386,18 +404,28 @@ export default {
         treatment.isDone = true;
         await treatments1.changeTreatmentState(treatment);
         this.treatments = await treatments1.getTreatments();
+        this.$alertify.success("treatment checked");
         this.updateRange();
       } catch {
-        alert("we have not managed to update this treatment, sorry");
+        Swal.fire({
+          icon: "error",
+          title: "ooops.....",
+          text: "we have not managed to update this treatment, sorry",
+        });
       }
     },
     async delete1(treatment) {
       try {
-        await treatments1.deleteTreatment(treatment);
+        await treatments1.deleteTreatment(treatment.treatmentId);
         this.treatments = await treatments1.getTreatments();
+        this.$alertify.success("treatment deleted");
         this.updateRange();
       } catch {
-        alert("we ran into problem, sorry");
+        Swal.fire({
+          icon: "error",
+          title: "ooops.....",
+          text: "we ran into problem, sorry",
+        });
       }
     },
     viewDay({ date }) {
@@ -452,15 +480,26 @@ export default {
       if (this.timeline == true) {
         this.timeline = false;
         this.calendar = true;
-        Swal.fire({
-          icon: "info",
-          title: "notice",
-          text: "in this view you can only see titles of treatments and their date",
-          timer: 5000,
-        });
       } else {
         this.calendar = false;
         this.timeline = true;
+      }
+    },
+    async delete2() {
+      try {
+        for (let i = 0; i < this.treatments.length; i++) {
+          await treatments1.deleteTreatment(this.treatments[i].treatmentId);
+        }
+        await cars.deleteCar(this.$store.state.currentCar.carId);
+        this.$router.push({ name: "home" });
+        window.scrollTo(0, 0);
+        alertify.success("car deleted successfully");
+      } catch {
+        Swal.fire({
+          icon: "error",
+          title: "ooops.....",
+          text: "we have'nt managed to delete this car",
+        });
       }
     },
   },

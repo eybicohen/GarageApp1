@@ -16,16 +16,18 @@ export default {
       return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3cwzqPQT3uAmuqGeZDa9hHY_YHLZYfAU1Mw&usqp=CAU";
     } else {
       const angleArr = [1, 9, 17, 22, 23, 27, 28, 29, 51];
+      const angle = angleArr[this.generateRandom()];
       const colors = await this.getColors(company, model);
+      const color = colors[this.generateRandom(colors.length)].toString();
       return (
         "https://cdn.imagin.studio/getImage?customer=img&make=" +
         company +
         "&modelFamily=" +
         model +
         "&angle=" +
-        angleArr[this.generateRandom()] +
+        angle +
         "&zoomType=fullscreen&paintId=" +
-        colors[this.generateRandom(colors.length)].toString() +
+        color +
         "&modelVariant=" +
         bodyType
       );
@@ -46,5 +48,18 @@ export default {
       model;
     const res = await axios.get(url);
     return Object.keys(res.data.paintData.paintCombinations);
+  },
+  async getCompanies() {
+    const res = await axios.get(
+      "https://cdn.imagin.studio/getCarListing?customer=copyright-imaginstudio"
+    );
+    return res.data.make;
+  },
+  async getModels(company) {
+    const res = await axios.get(
+      "https://cdn.imagin.studio/getCarListing?customer=copyright-imaginstudio&make=" +
+        company
+    );
+    return res.data.modelFamily;
   },
 };

@@ -38,22 +38,19 @@
               @input="$v.carName.$touch()"
               @blur="$v.carName.$touch()"
             ></v-text-field>
-            <v-text-field
+            <v-select
               style="width: 30vw; margin-left: 8vw"
               v-model="company"
-              :error-messages="companyErrors"
+              :items="companies"
               label="Car Company"
-              @input="$v.company.$touch()"
-              @blur="$v.company.$touch()"
-            ></v-text-field>
-            <v-text-field
+              @change="asignModels"
+            ></v-select>
+            <v-select
               style="width: 30vw; margin-left: 8vw"
               v-model="model"
-              :error-messages="modelErrors"
+              :items="models"
               label="Car Model"
-              @input="$v.model.$touch()"
-              @blur="$v.model.$touch()"
-            ></v-text-field>
+            ></v-select>
             <v-select
               :items="items"
               label="Body Type"
@@ -88,10 +85,10 @@
 import CarCard from "../components/CarCard.vue";
 import cars1 from "@/api/cars";
 import { validationMixin } from "vuelidate";
-import { required, helpers } from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 import carImage from "@/api/carImage.js";
-import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
+import Swal from "sweetalert2";
 
 export default {
   name: "MainPage",
@@ -99,34 +96,14 @@ export default {
 
   validations: {
     carName: {
-      alphaSpace: helpers.regex("alphaSpace", /^[a-zA-Z0-9\s]+$/),
       required,
     },
-    company: { alphaSpace2: helpers.regex("alphaSpace", /^[a-zA-Z0-9\s-]*$/) },
-    model: { alphaSpace1: helpers.regex("alphaSpace", /^[a-zA-Z0-9\s-]*$/) },
   },
 
   computed: {
-    companyErrors() {
-      const errors = [];
-      if (!this.$v.company.$dirty) return errors;
-      !this.$v.company.alphaSpace2 &&
-        errors.push("car company can only contain letters");
-      return errors;
-    },
-    modelErrors() {
-      const errors = [];
-      if (!this.$v.model.$dirty) return errors;
-      !this.$v.model.alphaSpace1 &&
-        errors.push("car name can only contain letters or numbers");
-
-      return errors;
-    },
     carNameErrors() {
       const errors = [];
       if (!this.$v.carName.$dirty) return errors;
-      !this.$v.carName.alphaSpace &&
-        errors.push("car name can only contain letters or numbers");
       !this.$v.carName.required && errors.push("car name is required");
 
       return errors;
@@ -154,11 +131,25 @@ export default {
       "double-cabin",
       "passenger-cabin",
     ],
+    companies: [],
+    models: [],
   }),
   async created() {
-    this.cars = await cars1.getCars();
+    if (!(JSON.parse(localStorage.getItem("user")) === null)) {
+      try {
+        this.cars = await cars1.getCars();
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "ooops.....",
+          text: "we ran into problem, sorry",
+        });
+      }
+    }
   },
-
+  async mounted() {
+    this.companies = await carImage.getCompanies();
+  },
   components: { CarCard },
   methods: {
     async submit() {
@@ -181,8 +172,13 @@ export default {
           this.cars = await cars1.getCars();
           this.clear();
           this.dialog = false;
+          this.$alertify.success("car added");
         } catch {
-          alert("we have not managed to add your car, sorry");
+          Swal.fire({
+            icon: "error",
+            title: "ooops.....",
+            text: "we have not managed to add your car, sorry",
+          });
         }
       }
     },
@@ -202,6 +198,9 @@ export default {
     close() {
       this.clear();
       this.dialog = false;
+    },
+    async asignModels() {
+      this.models = await carImage.getModels(this.company);
     },
   },
 };

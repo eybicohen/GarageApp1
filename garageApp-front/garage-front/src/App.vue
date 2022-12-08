@@ -22,25 +22,23 @@
           >GarageApp</v-app-bar-title
         >
       </v-col>
-      <span>{{ user.firstName }}</span>
       <v-spacer></v-spacer>
 
       <v-btn
         color="blue-grey"
         class="ma-2 white--text"
         @click="logout"
-        v-if="isUserConnected"
+        v-if="this.$store.state.isUserConnected"
       >
         logout
         <v-icon right dark> mdi-logout-variant</v-icon>
       </v-btn>
-      <v-menu bottom left v-if="isUserConnected">
+      <v-menu bottom left v-if="this.$store.state.isUserConnected">
         <template v-slot:activator="{ on, attrs }">
           <v-btn dark icon v-bind="attrs" v-on="on">
             <v-app-bar-nav-icon></v-app-bar-nav-icon>
           </v-btn>
         </template>
-
         <v-list>
           <v-list-item>
             <router-link to="/" style="text-decoration: none; color: inherit">
@@ -70,17 +68,7 @@ import MainPage from "./components/MainPage.vue";
 
 export default {
   name: "App",
-  data: () => ({
-    isUserConnected: false,
-  }),
-  computed: {
-    user() {
-      if (!(Object.keys(this.$store.state.user).length === 0)) {
-        this.isUserConnected = true;
-      }
-      return this.$store.state.user;
-    },
-  },
+  data: () => ({}),
   mounted() {
     if (JSON.parse(localStorage.getItem("user")) === null) {
       this.$router.push({ name: "login" });
@@ -89,14 +77,18 @@ export default {
         "changeUser",
         JSON.parse(localStorage.getItem("user"))
       );
+      this.$store.commit("changeUserConnected", true);
+    } else {
+      this.$store.commit("changeUserConnected", true);
     }
   },
+
   components: { MainPage },
   methods: {
     logout() {
       localStorage.clear();
+      this.$store.commit("changeUserConnected", false);
       this.$store.commit("changeUser", {});
-      this.isUserConnected = false;
       this.$router.push({ name: "login" });
     },
   },
