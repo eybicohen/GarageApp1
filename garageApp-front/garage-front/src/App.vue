@@ -15,12 +15,8 @@
         ></v-img>
       </template>
 
-      <v-col class="offset-4">
-        <v-app-bar-title
-          style="font-size: 63px; font-family: Cursive"
-          class="ml-16"
-          >GarageApp</v-app-bar-title
-        >
+      <v-col id="col">
+        <v-app-bar-title id="title">GarageApp</v-app-bar-title>
       </v-col>
       <v-spacer></v-spacer>
 
@@ -33,7 +29,7 @@
         logout
         <v-icon right dark> mdi-logout-variant</v-icon>
       </v-btn>
-      <v-menu bottom left v-if="this.$store.state.isUserConnected">
+      <v-menu bottom left v-if="this.$store.state.isUserConnected" id="menu">
         <template v-slot:activator="{ on, attrs }">
           <v-btn dark icon v-bind="attrs" v-on="on">
             <v-app-bar-nav-icon></v-app-bar-nav-icon>
@@ -94,3 +90,21 @@ export default {
   },
 };
 </script>
+
+<style>
+@media screen and (min-width: 1000px) {
+  #title {
+    font-size: 63px;
+    font-family: Cursive;
+  }
+  #col {
+    margin-left: 35vw;
+  }
+}
+@media screen and (max-width: 1000px) {
+  #title {
+    margin-top: 6vh;
+    font-size: 2rem;
+  }
+}
+</style>

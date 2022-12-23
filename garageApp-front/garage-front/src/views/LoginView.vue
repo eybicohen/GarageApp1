@@ -20,8 +20,15 @@
                           <v-btn class="mx-2" fab color="black" outlined>
                             <v-icon>fab fa-facebook-f</v-icon>
                           </v-btn>
+
                           <v-btn class="mx-2" fab color="black" outlined>
-                            <v-icon>fab fa-google-plus-g</v-icon>
+                            <g-signin-button
+                              :params="googleSignInParams"
+                              @success="onSignInSuccess"
+                              @error="onSignInError"
+                            >
+                              <v-icon>fab fa-google-plus-g</v-icon>
+                            </g-signin-button>
                           </v-btn>
                           <v-btn class="mx-2" fab color="black" outlined>
                             <v-icon>fab fa-linkedin-in</v-icon>
@@ -232,6 +239,12 @@ export default {
     password: "",
     email1: "",
     password1: "",
+    googleSignInParams: {
+      client_id:
+        "494104416163-c2084jcja7tbvl5qn17us931ci53f626.apps.googleusercontent.com",
+      scope: "email",
+      plugin_name: "My Project 27046",
+    },
   }),
 
   props: {
@@ -338,6 +351,17 @@ export default {
         this.clear();
         this.step--;
       }
+    },
+    onSignInSuccess(googleUser) {
+      // `googleUser` is the GoogleUser object that represents the just-signed-in user.
+      // See https://developers.google.com/identity/sign-in/web/reference#users
+      const profile = googleUser.getBasicProfile(); // etc etc
+      console.log(profile.getName());
+      console.log(profile);
+    },
+    onSignInError(error) {
+      // `error` contains any error occurred.
+      console.log("OH NOES", error);
     },
   },
 };

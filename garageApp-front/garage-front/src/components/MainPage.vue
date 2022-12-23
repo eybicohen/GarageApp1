@@ -22,7 +22,7 @@
         <v-card style="color: azure">
           <form
             style="
-              height: 63vh;
+              height: 75vh;
               margin-left: 20px;
               text-align: center;
               align-items: center;
@@ -50,6 +50,13 @@
               v-model="model"
               :items="models"
               label="Car Model"
+              @change="asignSubModels"
+            ></v-select>
+            <v-select
+              style="width: 30vw; margin-left: 8vw"
+              v-model="subModel"
+              :items="subModels"
+              label="Sub Model"
             ></v-select>
             <v-select
               :items="items"
@@ -116,6 +123,7 @@ export default {
     carName: "",
     company: "",
     model: "",
+    subModel: "",
     type: "",
     items: [
       "hatchback",
@@ -133,6 +141,7 @@ export default {
     ],
     companies: [],
     models: [],
+    subModels: [],
   }),
   async created() {
     if (!(JSON.parse(localStorage.getItem("user")) === null)) {
@@ -158,13 +167,17 @@ export default {
         const img = await carImage.getCarSrc(
           this.company,
           this.model,
+          this.subModel,
           this.type
         );
         try {
           const car = {
             carName: this.carName,
             carCompany: this.company,
-            model: this.model,
+            model:
+              this.model == this.subModel
+                ? this.model
+                : this.model + " " + this.subModel,
             image: img,
             userId: this.$store.state.user,
           };
@@ -187,6 +200,7 @@ export default {
       this.carName = "";
       this.company = "";
       this.model = "";
+      this.subModel = "";
       this.type = "";
     },
     goToTreatment(car) {
@@ -201,6 +215,12 @@ export default {
     },
     async asignModels() {
       this.models = await carImage.getModels(this.company);
+    },
+    async asignSubModels() {
+      this.subModels = await carImage.getSubModels(this.company, this.model);
+      if (this.subModels.length === 1) {
+        this.subModel = this.subModels[0];
+      }
     },
   },
 };

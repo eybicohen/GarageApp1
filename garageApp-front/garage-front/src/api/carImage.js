@@ -1,16 +1,16 @@
 import axios from "axios";
+const imgUrl = "https://cdn.imagin.studio/getImage?customer=img&make=";
+const carListingUrl =
+  "https://cdn.imagin.studio/getCarListing?customer=copyright-imaginstudio";
 
 export default {
   async readResponseHeader(imgUrl) {
     let res = await axios.get(imgUrl);
     return res.headers["x-imaginstudio-request-found"];
   },
-  async getCarSrc(company, model, bodyType) {
+  async getCarSrc(company, model, subModel, bodyType) {
     const state = await this.readResponseHeader(
-      "https://cdn.imagin.studio/getImage?customer=img&make=" +
-        company +
-        "&modelFamily=" +
-        model
+      imgUrl + company + "&modelFamily=" + model
     );
     if (state === "false") {
       return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3cwzqPQT3uAmuqGeZDa9hHY_YHLZYfAU1Mw&usqp=CAU";
@@ -20,10 +20,12 @@ export default {
       const colors = await this.getColors(company, model);
       const color = colors[this.generateRandom(colors.length)].toString();
       return (
-        "https://cdn.imagin.studio/getImage?customer=img&make=" +
+        imgUrl +
         company +
         "&modelFamily=" +
         model +
+        "&modelRange=" +
+        subModel +
         "&angle=" +
         angle +
         "&zoomType=fullscreen&paintId=" +
@@ -50,16 +52,17 @@ export default {
     return Object.keys(res.data.paintData.paintCombinations);
   },
   async getCompanies() {
-    const res = await axios.get(
-      "https://cdn.imagin.studio/getCarListing?customer=copyright-imaginstudio"
-    );
+    const res = await axios.get(carListingUrl);
     return res.data.make;
   },
   async getModels(company) {
-    const res = await axios.get(
-      "https://cdn.imagin.studio/getCarListing?customer=copyright-imaginstudio&make=" +
-        company
-    );
+    const res = await axios.get(carListingUrl + "&make=" + company);
     return res.data.modelFamily;
+  },
+  async getSubModels(company, model) {
+    const res = await axios.get(
+      carListingUrl + "&make=" + company + "&modelFamily=" + model
+    );
+    return res.data.modelRange;
   },
 };

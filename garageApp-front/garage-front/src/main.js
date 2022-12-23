@@ -4,6 +4,8 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import VueAlertify from "vue-alertify";
+import GSignInButton from 'vue-google-signin-button'
+Vue.use(GSignInButton)
 
 Vue.use(VueAlertify);
 
