@@ -144,7 +144,7 @@ export default {
     subModels: [],
   }),
   async created() {
-    if (!(JSON.parse(localStorage.getItem("user")) === null)) {
+    if (!(JSON.parse(localStorage.getItem("access_token")) === null)) {
       try {
         this.cars = await cars1.getCars();
       } catch (error) {
@@ -174,12 +174,11 @@ export default {
           const car = {
             carName: this.carName,
             carCompany: this.company,
-            model:
-              this.model == this.subModel
-                ? this.model
-                : this.model + " " + this.subModel,
+            model: this.subModel.includes(this.model)
+              ? this.subModel
+              : this.model + " " + this.subModel,
             image: img,
-            userId: this.$store.state.user,
+            userId: this.$store.state.user.id,
           };
           await cars1.addCar(car);
           this.cars = await cars1.getCars();
@@ -204,8 +203,8 @@ export default {
       this.type = "";
     },
     goToTreatment(car) {
-      this.$store.commit("changeCurrentCar", car);
-      localStorage.setItem("car", JSON.stringify(car));
+      this.$store.commit("changeCurrentCar", car.carId);
+      localStorage.setItem("carId", JSON.stringify(car.carId));
       this.$router.push({ name: "treatment" });
       window.scrollTo(0, 0);
     },
@@ -214,7 +213,12 @@ export default {
       this.dialog = false;
     },
     async asignModels() {
+      this.subModel = "";
       this.models = await carImage.getModels(this.company);
+      if (this.models.length === 1) {
+        this.model = this.models[0];
+        this.asignSubModels();
+      }
     },
     async asignSubModels() {
       this.subModels = await carImage.getSubModels(this.company, this.model);

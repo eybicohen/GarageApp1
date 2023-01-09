@@ -66,12 +66,12 @@ export default {
   name: "App",
   data: () => ({}),
   mounted() {
-    if (JSON.parse(localStorage.getItem("user")) === null) {
+    if (JSON.parse(localStorage.getItem("access_token")) === null) {
       this.$router.push({ name: "login" });
     } else if (Object.keys(this.$store.state.user).length === 0) {
       this.$store.commit(
         "changeUser",
-        JSON.parse(localStorage.getItem("user"))
+        JSON.parse(localStorage.getItem("access_token"))
       );
       this.$store.commit("changeUserConnected", true);
     } else {

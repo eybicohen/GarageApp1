@@ -334,14 +334,14 @@ export default {
   },
   mounted() {},
   async created() {
-    if (JSON.parse(localStorage.getItem("car")) === null) {
+    if (JSON.parse(localStorage.getItem("carId")) === null) {
       this.$router.push({ name: "home" });
     } else {
       this.$store.commit(
         "changeCurrentCar",
-        JSON.parse(localStorage.getItem("car"))
+        JSON.parse(localStorage.getItem("carId"))
       );
-      this.car = JSON.parse(localStorage.getItem("car"));
+      this.car = await cars.getById(JSON.parse(localStorage.getItem("carId")));
     }
     this.treatments = await treatments1.getTreatments();
     this.updateRange();
@@ -401,8 +401,7 @@ export default {
     },
     async checkDone(treatment) {
       try {
-        treatment.isDone = true;
-        await treatments1.changeTreatmentState(treatment);
+        await treatments1.changeTreatmentState(treatment.treatmentId);
         this.treatments = await treatments1.getTreatments();
         this.$alertify.success("treatment checked");
         this.updateRange();
@@ -490,7 +489,7 @@ export default {
         for (let i = 0; i < this.treatments.length; i++) {
           await treatments1.deleteTreatment(this.treatments[i].treatmentId);
         }
-        await cars.deleteCar(this.$store.state.currentCar.carId);
+        await cars.deleteCar(JSON.parse(localStorage.getItem("carId")));
         this.$router.push({ name: "home" });
         window.scrollTo(0, 0);
         alertify.success("car deleted successfully");

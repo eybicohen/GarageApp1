@@ -117,7 +117,13 @@
                           </v-btn>
 
                           <v-btn class="mx-2" fab color="black" outlined>
-                            <v-icon>fab fa-google-plus-g</v-icon>
+                            <g-signin-button
+                              :params="googleSignInParams"
+                              @success="onSignInSuccess"
+                              @error="onSignInError"
+                            >
+                              <v-icon>fab fa-google-plus-g</v-icon>
+                            </g-signin-button>
                           </v-btn>
                           <v-btn class="mx-2" fab color="black" outlined>
                             <v-icon>fab fa-linkedin-in</v-icon>
@@ -208,6 +214,8 @@
 
 <script>
 import { validationMixin } from "vuelidate";
+import Swal from "sweetalert2";
+
 import {
   required,
   maxLength,
@@ -295,14 +303,18 @@ export default {
     async submit() {
       if (!this.$v.$error) {
         if (this.step === 1) {
-          const user = await users.getUserByEmail(this.email1);
-          if (this.password1 == user.password) {
+          try {
+            const params = {
+              email: this.email1,
+              password: this.password1,
+            };
+            const user = await users.loginUser(params);
+            localStorage.setItem("access_token", JSON.stringify(user));
             this.$store.commit("changeUser", user);
             this.$store.commit("changeUserConnected", true);
-            localStorage.setItem("user", JSON.stringify(user));
             this.$router.push({ name: "home" });
             this.$alertify.success("login successfully");
-          } else {
+          } catch {
             Swal.fire({
               icon: "error",
               title: "ooops.....",
@@ -318,14 +330,17 @@ export default {
               email: this.email,
               password: this.password,
             };
-            await users.registerUser(user);
+            const accesssToken = await users.registerUser(user);
+            localStorage.setItem("access_token", JSON.stringify(accesssToken));
+            this.$store.commit("changeUser", accesssToken);
+            this.$store.commit("changeUserConnected", true);
+            this.$router.push({ name: "home" });
             this.$alertify.success("user added successfully");
-            this.step--;
           } catch {
             Swal.fire({
               icon: "error",
               title: "ooops.....",
-              text: "looks like you already have an acount",
+              text: "you may already have an acount",
             });
           }
         }
@@ -352,12 +367,29 @@ export default {
         this.step--;
       }
     },
-    onSignInSuccess(googleUser) {
+    async onSignInSuccess(googleUser) {
       // `googleUser` is the GoogleUser object that represents the just-signed-in user.
       // See https://developers.google.com/identity/sign-in/web/reference#users
       const profile = googleUser.getBasicProfile(); // etc etc
-      console.log(profile.getName());
-      console.log(profile);
+      const googleU = {
+        firstName: profile.getGivenName(),
+        lastName: profile.getFamilyName(),
+        email: profile.getEmail(),
+      };
+      try {
+        const accesssToken = await users.googleLogin(googleU);
+        localStorage.setItem("access_token", JSON.stringify(accesssToken));
+        this.$store.commit("changeUser", accesssToken);
+        this.$store.commit("changeUserConnected", true);
+        this.$router.push({ name: "home" });
+        this.$alertify.success("google login successfully");
+      } catch {
+        Swal.fire({
+          icon: "error",
+          title: "ooops.....",
+          text: "you may already have an acount",
+        });
+      }
     },
     onSignInError(error) {
       // `error` contains any error occurred.

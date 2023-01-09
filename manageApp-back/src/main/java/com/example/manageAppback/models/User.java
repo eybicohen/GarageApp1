@@ -9,6 +9,16 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User {
+    public User(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = null;
+    }
+
+    public User() {
+    }
+
     @Id
     @Column(name = "id")
     @JsonProperty
@@ -32,4 +42,16 @@ public class User {
     @JsonProperty
     private String password;
 
+    public Integer getId() {
+        return this.id;
+    }
+
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
 }

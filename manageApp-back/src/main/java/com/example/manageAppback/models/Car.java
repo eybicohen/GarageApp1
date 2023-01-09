@@ -34,4 +34,38 @@ public class Car {
     @ManyToOne(targetEntity = User.class)
     private User userId;
 
+    public Car(String carName, String carCompany, String model, String image, User userId) {
+        this.carName = carName;
+        this.carCompany = carCompany;
+        this.model = model;
+        this.image = image;
+        this.userId = userId;
+    }
+
+    public Car() {
+    }
+
+    public Integer getCarId() {
+        return carId;
+    }
+
+    public String getCarName() {
+        return carName;
+    }
+
+    public String getCarCompany() {
+        return carCompany;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
 }

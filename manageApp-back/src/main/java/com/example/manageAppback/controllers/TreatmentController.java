@@ -1,5 +1,6 @@
 package com.example.manageAppback.controllers;
 
+import com.example.manageAppback.dto.TreatmentDto;
 import com.example.manageAppback.models.Car;
 import com.example.manageAppback.models.Treatment;
 import com.example.manageAppback.services.TreatmentService;
@@ -16,18 +17,18 @@ public class TreatmentController {
     TreatmentService treatmentService;
 
     @GetMapping("/{carId}")
-    public List<Treatment> getAllByCarId(@PathVariable Integer carId) {
+    public List<TreatmentDto> getAllByCarId(@PathVariable Integer carId) {
         return this.treatmentService.getAllByCarId(carId);
     }
 
     @PostMapping("")
-    public void addTreatment(@RequestBody Treatment newTreatment) {
+    public void addTreatment(@RequestBody TreatmentDto newTreatment) {
         this.treatmentService.addTreatment(newTreatment);
     }
 
-    @PatchMapping("")
-    public void changeState(@RequestBody Treatment treatment) {
-        this.treatmentService.changeState(treatment);
+    @PatchMapping("/{id}")
+    public void changeState(@PathVariable Integer id) {
+        this.treatmentService.changeState(id);
     }
 
     @DeleteMapping("/{id}")
