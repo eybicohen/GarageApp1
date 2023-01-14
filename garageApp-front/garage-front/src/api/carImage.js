@@ -1,39 +1,28 @@
 import axios from "axios";
-const imgUrl = "https://cdn.imagin.studio/getImage?customer=img&make=";
-const carListingUrl =
+const IMG_URL = "https://cdn.imagin.studio/getImage?customer=img&make=";
+const CAR_LISTING_URL =
   "https://cdn.imagin.studio/getCarListing?customer=copyright-imaginstudio";
 
 export default {
-  async readResponseHeader(imgUrl) {
-    let res = await axios.get(imgUrl);
-    return res.headers["x-imaginstudio-request-found"];
-  },
   async getCarSrc(company, model, subModel, bodyType) {
-    const state = await this.readResponseHeader(
-      imgUrl + company + "&modelFamily=" + model
+    const angleArr = [1, 9, 17, 22, 23, 27, 28, 29, 51];
+    const angle = angleArr[this.generateRandom()];
+    const colors = await this.getColors(company, model);
+    const color = colors[this.generateRandom(colors.length)].toString();
+    return (
+      IMG_URL +
+      company +
+      "&modelFamily=" +
+      model +
+      "&modelRange=" +
+      subModel +
+      "&angle=" +
+      angle +
+      "&zoomType=fullscreen&paintId=" +
+      color +
+      "&modelVariant=" +
+      bodyType
     );
-    if (state === "false") {
-      return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3cwzqPQT3uAmuqGeZDa9hHY_YHLZYfAU1Mw&usqp=CAU";
-    } else {
-      const angleArr = [1, 9, 17, 22, 23, 27, 28, 29, 51];
-      const angle = angleArr[this.generateRandom()];
-      const colors = await this.getColors(company, model);
-      const color = colors[this.generateRandom(colors.length)].toString();
-      return (
-        imgUrl +
-        company +
-        "&modelFamily=" +
-        model +
-        "&modelRange=" +
-        subModel +
-        "&angle=" +
-        angle +
-        "&zoomType=fullscreen&paintId=" +
-        color +
-        "&modelVariant=" +
-        bodyType
-      );
-    }
   },
   generateRandom(maxLimit = 9) {
     let rand = Math.random() * maxLimit;
@@ -52,16 +41,16 @@ export default {
     return Object.keys(res.data.paintData.paintCombinations);
   },
   async getCompanies() {
-    const res = await axios.get(carListingUrl);
+    const res = await axios.get(CAR_LISTING_URL);
     return res.data.make;
   },
   async getModels(company) {
-    const res = await axios.get(carListingUrl + "&make=" + company);
+    const res = await axios.get(CAR_LISTING_URL + "&make=" + company);
     return res.data.modelFamily;
   },
   async getSubModels(company, model) {
     const res = await axios.get(
-      carListingUrl + "&make=" + company + "&modelFamily=" + model
+      CAR_LISTING_URL + "&make=" + company + "&modelFamily=" + model
     );
     return res.data.modelRange;
   },

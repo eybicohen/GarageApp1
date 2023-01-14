@@ -1,10 +1,8 @@
 package com.example.manageAppback.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -53,5 +51,9 @@ public class User {
 
     public String getEmail() {
         return this.email;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
     }
 }

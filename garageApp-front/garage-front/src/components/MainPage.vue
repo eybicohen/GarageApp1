@@ -41,6 +41,9 @@
             <v-select
               style="width: 30vw; margin-left: 8vw"
               v-model="company"
+              v-model.trim="company"
+              :error-messages="companyErrors"
+              required
               :items="companies"
               label="Car Company"
               @change="asignModels"
@@ -48,6 +51,9 @@
             <v-select
               style="width: 30vw; margin-left: 8vw"
               v-model="model"
+              v-model.trim="model"
+              :error-messages="modelsErrors"
+              required
               :items="models"
               label="Car Model"
               @change="asignSubModels"
@@ -77,6 +83,17 @@
       </v-dialog>
     </div>
 
+    <h1
+      style="
+        text-align: center;
+        font-family: 'Times New Roman', Times, serif;
+        color: darkgoldenrod;
+      "
+      v-if="cars.length == 0"
+    >
+      you don't have car information yet, click the add car button to start your
+      experience with us
+    </h1>
     <v-row>
       <CarCard
         v-for="car in cars"
@@ -105,6 +122,12 @@ export default {
     carName: {
       required,
     },
+    company: {
+      required,
+    },
+    model: {
+      required,
+    },
   },
 
   computed: {
@@ -112,6 +135,20 @@ export default {
       const errors = [];
       if (!this.$v.carName.$dirty) return errors;
       !this.$v.carName.required && errors.push("car name is required");
+
+      return errors;
+    },
+    companyErrors() {
+      const errors = [];
+      if (!this.$v.company.$dirty) return errors;
+      !this.$v.company.required && errors.push("company is required");
+
+      return errors;
+    },
+    modelsErrors() {
+      const errors = [];
+      if (!this.$v.model.$dirty) return errors;
+      !this.$v.model.required && errors.push("model is required");
 
       return errors;
     },

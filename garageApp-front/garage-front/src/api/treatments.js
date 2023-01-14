@@ -2,17 +2,15 @@ import axios from "axios";
 const BASE_URL = "http://localhost:9000/treatments/";
 
 export default {
-  async getTreatments() {
-    const res = await axios.get(
-      BASE_URL + JSON.parse(localStorage.getItem("carId")),
-      {
-        headers: {
-          Authorization: `Bearer ${JSON.parse(
-            localStorage.getItem("access_token")
-          )}`,
-        },
-      }
-    );
+  async getTreatments(id = null) {
+    const carId = id === null ? JSON.parse(localStorage.getItem("carId")) : id;
+    const res = await axios.get(BASE_URL + carId, {
+      headers: {
+        Authorization: `Bearer ${JSON.parse(
+          localStorage.getItem("access_token")
+        )}`,
+      },
+    });
     return res.data;
   },
   async addTreatment(newTreatment) {

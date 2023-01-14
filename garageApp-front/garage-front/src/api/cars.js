@@ -1,4 +1,5 @@
 import axios from "axios";
+import treatments from "./treatments";
 const BASE_URL = "http://localhost:9000/cars/";
 
 export default {
@@ -39,5 +40,15 @@ export default {
       },
     });
     return res.data;
+  },
+  async alDone(carId) {
+    const carTreatments = await treatments.getTreatments(carId);
+    let done = true;
+    carTreatments.forEach((treat) => {
+      if (!treat.isDone) {
+        done = false;
+      }
+    });
+    return done;
   },
 };

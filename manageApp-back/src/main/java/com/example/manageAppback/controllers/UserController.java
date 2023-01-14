@@ -3,6 +3,7 @@ package com.example.manageAppback.controllers;
 import com.example.manageAppback.models.User;
 import com.example.manageAppback.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,5 +28,17 @@ public class UserController {
     @PostMapping("")
     public void addUser(@RequestBody User newUser) {
         this.userService.addUser(newUser);
+    }
+
+
+    @GetMapping("/is-only-google-user")
+    public Boolean isOnlyGoogleUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        User user = this.userService.getUserByToken(token);
+        return user.getPassword() == null;
+    }
+
+    @PatchMapping("/change-password")
+    public void changePassword(@RequestBody String password, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        this.userService.changePassword(token, password);
     }
 }

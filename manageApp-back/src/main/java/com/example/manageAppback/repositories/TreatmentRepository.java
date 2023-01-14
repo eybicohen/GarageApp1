@@ -1,6 +1,5 @@
 package com.example.manageAppback.repositories;
 
-import com.example.manageAppback.models.Car;
 import com.example.manageAppback.models.Treatment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

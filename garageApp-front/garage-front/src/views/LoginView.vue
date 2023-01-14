@@ -387,7 +387,7 @@ export default {
         Swal.fire({
           icon: "error",
           title: "ooops.....",
-          text: "you may already have an acount",
+          text: "you may already have a regular acount in our site",
         });
       }
     },

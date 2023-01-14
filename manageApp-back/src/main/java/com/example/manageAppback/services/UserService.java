@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.example.manageAppback.repositories.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +40,11 @@ public class UserService {
     public User getUserByToken(String token) {
         String email = this.jwtUtils.extractUsername(token.substring(7));
         return this.getByEmail(email);
+    }
+
+    public void changePassword(String token, String password) {
+        User user = getUserByToken(token);
+        user.changePassword(password);
+        this.userRepository.save(user);
     }
 }
